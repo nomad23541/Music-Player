@@ -2,7 +2,11 @@ package com.chrisreading.musicplayer;
 
 import java.io.IOException;
 
+import com.chrisreading.musicplayer.model.Song;
+
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -16,6 +20,8 @@ public class MainApp extends Application {
 	
 	private Stage primaryStage;
 	private BorderPane rootLayout; // layout of the root 
+	
+	private ObservableList<Song> songData = FXCollections.observableArrayList();
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -24,6 +30,14 @@ public class MainApp extends Application {
 		
 		initRootLayout();
 		showPlayerOverview();
+	}
+	
+	/**
+	 * Gets the song data
+	 * @return the song data
+	 */
+	public ObservableList<Song> getSongData() {
+		return songData;
 	}
 	
 	/**
