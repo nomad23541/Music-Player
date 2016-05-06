@@ -5,6 +5,7 @@ import com.chrisreading.musicplayer.model.Song;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 /**
  * Controller class for the PlayerOverview fxml
@@ -14,6 +15,8 @@ public class PlayerOverviewController {
 	/** Reference to the main class */
 	private MainApp mainApp;
 	
+	@FXML
+	private TableView<Song> songTable;
 	@FXML
 	private TableColumn<Song, String> titleColumn;
 	@FXML
@@ -62,6 +65,9 @@ public class PlayerOverviewController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		
+		// use the list from the main class to fill in the table
+		songTable.setItems(mainApp.getSongData());	
 	}
 	
 }

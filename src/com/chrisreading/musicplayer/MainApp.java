@@ -1,8 +1,10 @@
 package com.chrisreading.musicplayer;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.chrisreading.musicplayer.model.Song;
+import com.chrisreading.musicplayer.view.PlayerOverviewController;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -30,6 +32,11 @@ public class MainApp extends Application {
 		
 		initRootLayout();
 		showPlayerOverview();
+		
+		// add some sample data
+		songData.add(new Song(new File("C:\\Users\\Public\\Music\\Sample Music\\Kalimba.mp3")));
+		songData.add(new Song(new File("C:\\Users\\Public\\Music\\Sample Music\\Maid with the Flaxen Hair.mp3")));
+		songData.add(new Song(new File("C:\\Users\\Public\\Music\\Sample Music\\Sleep Away.mp3")));
 	}
 	
 	/**
@@ -71,6 +78,10 @@ public class MainApp extends Application {
 			
 			// set person overview to center of root layout
 			rootLayout.setCenter(todoOverview);
+			
+			// give controller access to the mainapp
+			PlayerOverviewController controller = loader.getController();
+			controller.setMainApp(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

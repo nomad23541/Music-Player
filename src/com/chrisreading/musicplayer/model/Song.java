@@ -27,6 +27,11 @@ public class Song {
 	
 	public Song(File file) {
 		this.file = file;
+		title = new SimpleStringProperty();
+		artist = new SimpleStringProperty();
+		album = new SimpleStringProperty();
+		length = new SimpleStringProperty();
+		
 		media = new Media(file.toURI().toString());
 		
 		// retrieve the mp3 metadata
@@ -45,14 +50,13 @@ public class Song {
 	 */
 	private void handleMetaData(String key, Object value) {
 		if(key.equals("album"))
-			album = new SimpleStringProperty(value.toString());
+			album.set(value.toString());
 		else if(key.equals("artist"))
-			artist = new SimpleStringProperty(value.toString());
+			artist.set(value.toString());
 		if(key.equals("title"))
-			title = new SimpleStringProperty(value.toString());
-		if(key.equals("length"))
-			length = new SimpleStringProperty(value.toString());
-		
+			title.set(value.toString());
+		if(key.equals("year"))
+			length.set(value.toString());	
 	}
 	
 	/** GETTER & SETTERS */
