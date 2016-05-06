@@ -1,9 +1,10 @@
 package com.chrisreading.musicplayer.model;
 
+import java.io.File;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.MapChangeListener;
-import javafx.collections.MapChangeListener.Change;
 import javafx.scene.media.Media;
 
 /**
@@ -12,7 +13,7 @@ import javafx.scene.media.Media;
 public class Song {
 	
 	/** Location of the music file */
-	private StringProperty file;
+	private File file;
 	
 	/** Song Metadata */
 	private StringProperty title, artist, album, length;
@@ -24,9 +25,9 @@ public class Song {
 		this(null);
 	}
 	
-	public Song(String file) {
-		this.file = new SimpleStringProperty(file);
-		media = new Media(this.file.get());
+	public Song(File file) {
+		this.file = file;
+		media = new Media(file.toURI().toString());
 		
 		// retrieve the mp3 metadata
 		media.getMetadata().addListener(new MapChangeListener<String, Object>() {
@@ -56,12 +57,8 @@ public class Song {
 	
 	/** GETTER & SETTERS */
 	
-	public StringProperty getProperty() {
+	public File getFile() {
 		return file;
-	}
-	
-	public String getFile() {
-		return file.get();
 	}
 	
 	public Media getMedia() {
