@@ -5,12 +5,14 @@ import com.chrisreading.musicplayer.model.Song;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.MediaPlayer;
 
 /**
@@ -71,6 +73,16 @@ public class PlayerOverviewController {
 				artistLabel.setText(selectedSong.getArtist());
 				albumLabel.setText(selectedSong.getAlbum());
 				
+			}
+		});
+		
+		// play song if row is double clicked on
+		songTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if(event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+					handlePlayPause();
+				}
 			}
 		});
 	}
