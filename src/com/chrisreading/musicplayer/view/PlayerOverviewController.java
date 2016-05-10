@@ -2,8 +2,11 @@ package com.chrisreading.musicplayer.view;
 
 import com.chrisreading.musicplayer.MainApp;
 import com.chrisreading.musicplayer.model.Song;
+import com.chrisreading.musicplayer.util.QueueUtil;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -25,6 +28,12 @@ public class PlayerOverviewController {
 	private TableColumn<Song, String> albumColumn;
 	@FXML
 	private TableColumn<Song, String> lengthColumn;
+	@FXML
+	private Button playButton;	
+	@FXML
+	private Button previousButton;
+	@FXML
+	private Button nextButton;
 	
 	/**
 	 * Constructor
@@ -39,7 +48,7 @@ public class PlayerOverviewController {
 		titleColumn.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
 		artistColumn.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
 		albumColumn.setCellValueFactory(cellData -> cellData.getValue().getAlbumProperty());
-		// don't set length album for now
+		lengthColumn.setCellValueFactory(cellData -> cellData.getValue().getLengthProperty());
 	}
 	
 	/**
@@ -48,7 +57,31 @@ public class PlayerOverviewController {
 	 */
 	@FXML
 	private void handlePlayPause() {
-		
+		Song song = null; // TODO: Gather song
+		if(song != null) {
+			song.play();	
+			
+			// change button text on playing
+			if(song.isPlaying()) {
+				playButton.setText("▮▮");
+			} else {
+				playButton.setText("▶");
+			}
+		}
+	}
+	
+	/**
+	 * Goes to the next song
+	 */
+	@FXML
+	private void handleNext() {
+	}
+	
+	/**
+	 * Goes to a previous song
+	 */
+	@FXML
+	private void handlePrevious() {
 	}
 	
 	/**

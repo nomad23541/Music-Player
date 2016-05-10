@@ -34,9 +34,10 @@ public class MainApp extends Application {
 		showPlayerOverview();
 		
 		// add some sample data
-		songData.add(new Song(new File("C:\\Users\\Public\\Music\\Sample Music\\Kalimba.mp3")));
-		songData.add(new Song(new File("C:\\Users\\Public\\Music\\Sample Music\\Maid with the Flaxen Hair.mp3")));
-		songData.add(new Song(new File("C:\\Users\\Public\\Music\\Sample Music\\Sleep Away.mp3")));
+		songData.add(new Song(new File("C:\\Users\\Chris\\Music\\Aylius - Hoodlums (feat. SBF).mp3")));
+		songData.add(new Song(new File("C:\\Users\\Chris\\Music\\Aylius - Psychotic (feat. Katie Joy).mp3")));
+		songData.add(new Song(new File("C:\\Users\\Chris\\Music\\Zomboy - Here To Stay feat. Lady Chann (Aylius Remix) 1.mp3")));
+		songData.add(new Song(new File("C:\\Users\\Chris\\Music\\Seven Lions feat. Fiora - Days to Come (Aylius Remix).mp3")));
 	}
 	
 	/**

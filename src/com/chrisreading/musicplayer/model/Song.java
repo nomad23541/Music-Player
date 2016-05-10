@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.MapChangeListener;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 /**
  * Model for a song (mp3)
@@ -20,6 +21,12 @@ public class Song {
 	
 	/** Location turned to media */
 	private Media media;
+	
+	/** The media player */
+	private MediaPlayer player;
+	
+	/** If the song is playing */
+	private boolean playing = false;
 	
 	public Song() {
 		this(null);
@@ -43,6 +50,29 @@ public class Song {
 				}
 			}
 		});
+		
+		// Get the length of the song
+		length.set(media.getDuration().toString());
+		
+		// ini the player
+		player = new MediaPlayer(media);
+	}
+	
+	/**
+	 * Will play, pause if already playing.
+	 */
+	public void play() {
+		if(!playing) {
+			player.play();
+			playing = true;
+		} else {
+			player.pause();
+			playing = false;
+		}
+	}
+	
+	public void stop() {
+		player.stop();
 	}
 	
 	/**
@@ -55,11 +85,13 @@ public class Song {
 			artist.set(value.toString());
 		if(key.equals("title"))
 			title.set(value.toString());
-		if(key.equals("year"))
-			length.set(value.toString());	
 	}
 	
 	/** GETTER & SETTERS */
+	
+	public boolean isPlaying() {
+		return playing;
+	}
 	
 	public File getFile() {
 		return file;
