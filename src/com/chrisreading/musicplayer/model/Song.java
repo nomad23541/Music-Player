@@ -2,9 +2,11 @@ package com.chrisreading.musicplayer.model;
 
 import java.io.File;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.MapChangeListener;
+import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -17,7 +19,8 @@ public class Song {
 	private File file;
 	
 	/** Song Metadata */
-	private StringProperty title, artist, album, length;
+	private StringProperty title, artist, album, year;
+	private ObjectProperty<Image> image; 
 	
 	/** Location turned to media */
 	private Media media;
@@ -37,7 +40,7 @@ public class Song {
 		title = new SimpleStringProperty();
 		artist = new SimpleStringProperty();
 		album = new SimpleStringProperty();
-		length = new SimpleStringProperty();
+		year = new SimpleStringProperty();
 		
 		media = new Media(file.toURI().toString());
 		
@@ -50,9 +53,6 @@ public class Song {
 				}
 			}
 		});
-		
-		// Get the length of the song
-		length.set(media.getDuration().toString());
 		
 		// ini the player
 		player = new MediaPlayer(media);
@@ -85,6 +85,11 @@ public class Song {
 			artist.set(value.toString());
 		if(key.equals("title"))
 			title.set(value.toString());
+		if(key.equals("year"))
+			year.set(value.toString());
+		if(key.equals("image"))
+			image.set((Image) value);
+			
 	}
 	
 	/** GETTER & SETTERS */
@@ -125,12 +130,20 @@ public class Song {
 		return artist.get();
 	}
 	
-	public StringProperty getLengthProperty() {
-		return length;
+	public StringProperty getYearProperty() {
+		return year;
 	}
 	
-	public String getLength() {
-		return length.get();
+	public String getYear() {
+		return year.get();
+	}
+	
+	public ObjectProperty<Image> getImageProperty() {
+		return image;
+	}
+	
+	public Image getImage() {
+		return image.get();
 	}
 
 }
