@@ -3,12 +3,15 @@ package com.chrisreading.musicplayer.view;
 import com.chrisreading.musicplayer.MainApp;
 import com.chrisreading.musicplayer.model.Song;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.MediaPlayer;
 
 /**
  * Controller class for the PlayerOverview fxml
@@ -27,7 +30,7 @@ public class PlayerOverviewController {
 	@FXML
 	private TableColumn<Song, String> albumColumn;
 	@FXML
-	private TableColumn<Song, String> lengthColumn;
+	private TableColumn<Song, String> yearColumn;
 	@FXML
 	private Button playButton;	
 	@FXML
@@ -35,12 +38,14 @@ public class PlayerOverviewController {
 	@FXML
 	private Button nextButton;
 	@FXML
+	private ImageView albumImage;
+	@FXML
 	private Label songLabel;
 	@FXML
-	private ImageView albumImage;
-	
-	private Song prevSong, currentSong;
-	
+	private Label artistLabel;
+	@FXML
+	private Label albumLabel;
+
 	/**
 	 * Constructor
 	 */
@@ -54,7 +59,20 @@ public class PlayerOverviewController {
 		titleColumn.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
 		artistColumn.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
 		albumColumn.setCellValueFactory(cellData -> cellData.getValue().getAlbumProperty());
-		lengthColumn.setCellValueFactory(cellData -> cellData.getValue().getYearProperty());
+		yearColumn.setCellValueFactory(cellData -> cellData.getValue().getYearProperty());
+		
+		// update song details when a row is selected
+		songTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				Song selectedSong = songTable.getSelectionModel().getSelectedItem();
+				albumImage.setImage(selectedSong.getImage());
+				songLabel.setText(selectedSong.getTitle());
+				artistLabel.setText(selectedSong.getArtist());
+				albumLabel.setText(selectedSong.getAlbum());
+				
+			}
+		});
 	}
 	
 	/**
@@ -62,9 +80,16 @@ public class PlayerOverviewController {
 	 * the currently selected song
 	 */
 	@FXML
-	private void handlePlayPause() {		
-		currentSong = songTable.getSelectionModel().getSelectedItem();	
-		currentSong.play();
+	private void handlePlayPause() {
+		Song currentSong = songTable.getSelectionModel().getSelectedItem();	
+		
+		if(currentSong.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
+			currentSong.getMediaPlayer().pause();
+			playButton.setText("▶");
+		} else {
+			currentSong.getMediaPlayer().play();
+			playButton.setText("▮▮");
+		}
 	}
 	
 	/**
@@ -74,12 +99,11 @@ public class PlayerOverviewController {
 	private void handleNext() {	
 		// stop previously playing song
 		Song prevSong = songTable.getSelectionModel().getSelectedItem();
-		prevSong.stop();
-		prevSong.stop();
+		prevSong.getMediaPlayer().stop();
 		
 		// select next song below and play
 		songTable.getSelectionModel().select(songTable.getSelectionModel().getSelectedIndex() + 1);
-		songTable.getSelectionModel().getSelectedItem().play();
+		songTable.getSelectionModel().getSelectedItem().getMediaPlayer().play();
 	}
 	
 	/**
@@ -89,12 +113,11 @@ public class PlayerOverviewController {
 	private void handlePrevious() {
 		// stop previously playing song
 		Song prevSong = songTable.getSelectionModel().getSelectedItem();
-		prevSong.stop();
-		prevSong.stop();
+		prevSong.getMediaPlayer().stop();
 		
 		// select next song below and play
 		songTable.getSelectionModel().select(songTable.getSelectionModel().getSelectedIndex() - 1);
-		songTable.getSelectionModel().getSelectedItem().play();
+		songTable.getSelectionModel().getSelectedItem().getMediaPlayer().play();
 	}
 	
 	/**

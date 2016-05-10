@@ -3,6 +3,7 @@ package com.chrisreading.musicplayer.model;
 import java.io.File;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.MapChangeListener;
@@ -28,9 +29,6 @@ public class Song {
 	/** The media player */
 	private MediaPlayer player;
 	
-	/** If the song is playing */
-	private boolean playing = false;
-	
 	public Song() {
 		this(null);
 	}
@@ -41,6 +39,7 @@ public class Song {
 		artist = new SimpleStringProperty();
 		album = new SimpleStringProperty();
 		year = new SimpleStringProperty();
+		image = new SimpleObjectProperty<Image>();
 		
 		media = new Media(file.toURI().toString());
 		
@@ -56,23 +55,6 @@ public class Song {
 		
 		// ini the player
 		player = new MediaPlayer(media);
-	}
-	
-	/**
-	 * Will play, pause if already playing.
-	 */
-	public void play() {
-		if(!playing) {
-			player.play();
-			playing = true;
-		} else {
-			player.pause();
-			playing = false;
-		}
-	}
-	
-	public void stop() {
-		player.stop();
 	}
 	
 	/**
@@ -94,12 +76,12 @@ public class Song {
 	
 	/** GETTER & SETTERS */
 	
-	public boolean isPlaying() {
-		return playing;
-	}
-	
 	public File getFile() {
 		return file;
+	}
+	
+	public MediaPlayer getMediaPlayer() {
+		return player;
 	}
 	
 	public Media getMedia() {
