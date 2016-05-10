@@ -2,11 +2,10 @@ package com.chrisreading.musicplayer.view;
 
 import com.chrisreading.musicplayer.MainApp;
 import com.chrisreading.musicplayer.model.Song;
-import com.chrisreading.musicplayer.util.QueueUtil;
 
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -34,6 +33,10 @@ public class PlayerOverviewController {
 	private Button previousButton;
 	@FXML
 	private Button nextButton;
+	@FXML
+	private Label songLabel;
+	
+	private Song prevSong, currentSong;
 	
 	/**
 	 * Constructor
@@ -56,25 +59,24 @@ public class PlayerOverviewController {
 	 * the currently selected song
 	 */
 	@FXML
-	private void handlePlayPause() {
-		Song song = null; // TODO: Gather song
-		if(song != null) {
-			song.play();	
-			
-			// change button text on playing
-			if(song.isPlaying()) {
-				playButton.setText("▮▮");
-			} else {
-				playButton.setText("▶");
-			}
-		}
+	private void handlePlayPause() {		
+		currentSong = songTable.getSelectionModel().getSelectedItem();	
+		currentSong.play();
 	}
 	
 	/**
 	 * Goes to the next song
 	 */
 	@FXML
-	private void handleNext() {
+	private void handleNext() {	
+		// stop previously playing song
+		Song prevSong = songTable.getSelectionModel().getSelectedItem();
+		prevSong.stop();
+		prevSong.stop();
+		
+		// select next song below and play
+		songTable.getSelectionModel().select(songTable.getSelectionModel().getSelectedIndex() + 1);
+		songTable.getSelectionModel().getSelectedItem().play();
 	}
 	
 	/**
@@ -82,6 +84,14 @@ public class PlayerOverviewController {
 	 */
 	@FXML
 	private void handlePrevious() {
+		// stop previously playing song
+		Song prevSong = songTable.getSelectionModel().getSelectedItem();
+		prevSong.stop();
+		prevSong.stop();
+		
+		// select next song below and play
+		songTable.getSelectionModel().select(songTable.getSelectionModel().getSelectedIndex() - 1);
+		songTable.getSelectionModel().getSelectedItem().play();
 	}
 	
 	/**
