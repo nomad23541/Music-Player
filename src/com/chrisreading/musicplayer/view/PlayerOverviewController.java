@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.ImageView;
 
 /**
  * Controller class for the PlayerOverview fxml
@@ -35,6 +36,8 @@ public class PlayerOverviewController {
 	private Button nextButton;
 	@FXML
 	private Label songLabel;
+	@FXML
+	private ImageView albumImage;
 	
 	private Song prevSong, currentSong;
 	
@@ -51,7 +54,7 @@ public class PlayerOverviewController {
 		titleColumn.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
 		artistColumn.setCellValueFactory(cellData -> cellData.getValue().getArtistProperty());
 		albumColumn.setCellValueFactory(cellData -> cellData.getValue().getAlbumProperty());
-		lengthColumn.setCellValueFactory(cellData -> cellData.getValue().getLengthProperty());
+		lengthColumn.setCellValueFactory(cellData -> cellData.getValue().getYearProperty());
 	}
 	
 	/**
