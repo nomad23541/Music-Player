@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
@@ -47,6 +48,13 @@ public class PlayerOverviewController {
 	private Label artistLabel;
 	@FXML
 	private Label albumLabel;
+	@FXML
+	private Slider volumeSlider;
+	@FXML
+	private Slider timeSlider;
+	
+	/** Previous song that was played */
+	private Song prevSong;
 
 	/**
 	 * Constructor
@@ -72,7 +80,6 @@ public class PlayerOverviewController {
 				songLabel.setText(selectedSong.getTitle());
 				artistLabel.setText(selectedSong.getArtist());
 				albumLabel.setText(selectedSong.getAlbum());
-				
 			}
 		});
 		
@@ -86,36 +93,46 @@ public class PlayerOverviewController {
 			}
 		});
 	}
-	
+
 	/**
 	 * Handles either playing or pausing
 	 * the currently selected song
 	 */
 	@FXML
 	private void handlePlayPause() {
-		Song currentSong = songTable.getSelectionModel().getSelectedItem();	
+		if(prevSong != null) {
+			// stop song previously playing
+			prevSong.getMediaPlayer().stop();
+		}
 		
-		if(currentSong.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
-			currentSong.getMediaPlayer().pause();
+		Song song = songTable.getSelectionModel().getSelectedItem();	
+		song.getMediaPlayer().volumeProperty().bindBidirectional(volumeSlider.valueProperty());
+		
+		if(song.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
+			song.getMediaPlayer().pause();
 			playButton.setText("▶");
 		} else {
-			currentSong.getMediaPlayer().play();
+			song.getMediaPlayer().play();
 			playButton.setText("▮▮");
 		}
+		
+		prevSong = song;
 	}
 	
 	/**
 	 * Goes to the next song
 	 */
 	@FXML
-	private void handleNext() {	
-		// stop previously playing song
-		Song prevSong = songTable.getSelectionModel().getSelectedItem();
+	private void handleNext() {
 		prevSong.getMediaPlayer().stop();
 		
 		// select next song below and play
 		songTable.getSelectionModel().select(songTable.getSelectionModel().getSelectedIndex() + 1);
-		songTable.getSelectionModel().getSelectedItem().getMediaPlayer().play();
+		Song song = songTable.getSelectionModel().getSelectedItem();
+		song.getMediaPlayer().play();
+		song.getMediaPlayer().volumeProperty().bindBidirectional(volumeSlider.valueProperty());
+		
+		prevSong = song;
 	}
 	
 	/**
@@ -123,21 +140,15 @@ public class PlayerOverviewController {
 	 */
 	@FXML
 	private void handlePrevious() {
-		// stop previously playing song
-		Song prevSong = songTable.getSelectionModel().getSelectedItem();
 		prevSong.getMediaPlayer().stop();
 		
 		// select next song below and play
 		songTable.getSelectionModel().select(songTable.getSelectionModel().getSelectedIndex() - 1);
-		songTable.getSelectionModel().getSelectedItem().getMediaPlayer().play();
-	}
-	
-	/**
-	 * Stops the playing completely.
-	 */
-	@FXML
-	private void handleStop() {
+		Song song = songTable.getSelectionModel().getSelectedItem();
+		song.getMediaPlayer().play();
+		song.getMediaPlayer().volumeProperty().bindBidirectional(volumeSlider.valueProperty());
 		
+		prevSong = song;
 	}
 	
 	/**
