@@ -2,6 +2,7 @@ package com.chrisreading.musicplayer.view;
 
 import com.chrisreading.musicplayer.MainApp;
 import com.chrisreading.musicplayer.model.Song;
+import com.chrisreading.musicplayer.util.TimeUtil;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 /**
  * Controller class for the PlayerOverview fxml
@@ -51,15 +53,27 @@ public class PlayerOverviewController {
 	@FXML
 	private Slider volumeSlider;
 	@FXML
-	private Slider timeSlider;
+	private Slider seekSlider;
+	@FXML
+	private Label timeLabel;
+	@FXML
+	private Label durationLabel;
 	
 	/** Previous song that was played */
 	private Song prevSong;
+	
+	/** Currently used MediaPlayer */
+	private MediaPlayer player;
+	
+	/** Minimum changed allowed when seeking */
+	private final double MIN_CHANGE = 0.5;
 
 	/**
 	 * Constructor
 	 */
-	public PlayerOverviewController() {}
+	public PlayerOverviewController() {
+		
+	}
 
 	/**
 	 * Called before the constructor
@@ -91,7 +105,7 @@ public class PlayerOverviewController {
 					handlePlayPause();
 				}
 			}
-		});
+		});	
 	}
 
 	/**
@@ -116,7 +130,10 @@ public class PlayerOverviewController {
 			playButton.setText("▮▮");
 		}
 		
+		player = song.getMediaPlayer();
 		prevSong = song;
+		
+		initSeekFunction(player, seekSlider);
 	}
 	
 	/**
@@ -132,7 +149,10 @@ public class PlayerOverviewController {
 		song.getMediaPlayer().play();
 		song.getMediaPlayer().volumeProperty().bindBidirectional(volumeSlider.valueProperty());
 		
+		player = song.getMediaPlayer();
 		prevSong = song;
+		
+		initSeekFunction(player, seekSlider);
 	}
 	
 	/**
@@ -148,7 +168,40 @@ public class PlayerOverviewController {
 		song.getMediaPlayer().play();
 		song.getMediaPlayer().volumeProperty().bindBidirectional(volumeSlider.valueProperty());
 		
+		player = song.getMediaPlayer();
 		prevSong = song;
+		
+		initSeekFunction(player, seekSlider);
+
+	}
+	
+	private void initSeekFunction(MediaPlayer player, Slider seekSlider) {
+		player.totalDurationProperty().addListener((obs, oldDuration, newDuration) -> seekSlider.setMax(newDuration.toSeconds()));
+		
+		seekSlider.setMin(0);
+		seekSlider.setMax(player.getTotalDuration().toSeconds());
+
+		seekSlider.valueChangingProperty().addListener((obs, wasChanging, isChanging) -> {
+			if (!isChanging) {
+				player.seek(Duration.seconds(seekSlider.getValue()));
+			}
+		});
+
+		seekSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
+			if (!seekSlider.isValueChanging()) {
+				double currentTime = player.getCurrentTime().toSeconds();
+				if (Math.abs(currentTime - newValue.doubleValue()) > MIN_CHANGE) {
+					player.seek(Duration.seconds(newValue.doubleValue()));
+				}
+			}
+		});
+
+		player.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+			if (!seekSlider.isValueChanging()) {
+				seekSlider.setValue(newTime.toSeconds());
+				timeLabel.setText(TimeUtil.formatTime(player.getCurrentTime(), player.getTotalDuration()));
+			}
+		});
 	}
 	
 	/**
